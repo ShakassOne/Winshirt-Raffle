@@ -10,5 +10,8 @@
     "check": "npm run typecheck && npm run test && npm run build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "NODE_ENV=test node --test dist/tests/health.test.js"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
   }
 }
