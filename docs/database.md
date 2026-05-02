@@ -25,3 +25,9 @@
 - No ticket generation logic.
 - No real draw execution.
 - No storefront/theme app extension features.
+
+
+## Admin raffles V1 (0.2.9)
+- Implémenté côté serveur: CRUD Raffle + gestion RaffleProduct.
+- Saisie manuelle des IDs Shopify (`shopifyProductId`, `shopifyVariantId`) en attendant un picker via Admin API.
+- Non inclus: génération tickets, webhooks `orders/paid`, `refunds/create`, `orders/cancelled`, tirage.

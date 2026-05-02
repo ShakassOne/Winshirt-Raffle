@@ -15,8 +15,15 @@
 ## Priorité produit
 - **Ne pas commencer** les loteries/tickets tant que le socle Shopify n’est pas validé.
 
-## Mise à jour 0.2.7
+## Mise à jour 0.2.9
 - Prisma/session storage Shopify réintroduits avec persistance PostgreSQL.
 - Webhook `app/uninstalled` remet `Shop.isInstalled` à `false`, renseigne `uninstalledAt` et supprime les sessions.
 - Les modèles Prisma loteries/tickets (Raffle, RaffleProduct, ShopifyOrder, Ticket, FreeEntry, AuditLog, DrawReport) sont ajoutés; la logique applicative reste non implémentée.
 - GitHub Actions CI reste le gate obligatoire avant merge.
+
+
+## Mise à jour 0.2.9
+- Admin loteries V1 ajouté: liste, création, édition, statuts autorisés et gestion des produits liés RaffleProduct.
+- Validations serveur (slug, maxTickets, dates, ticketsPerUnit) ajoutées.
+- AuditLog minimal ajouté sur create/update raffle et create/update/disable raffle product.
+- Tickets non générés, webhooks commandes non implémentés dans cette version.

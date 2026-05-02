@@ -4,12 +4,13 @@ import {shopify} from './lib/shopify.js';
 import {healthResponse} from './routes/public/health.js';
 import {prisma} from './lib/prisma.js';
 import {handleAppUninstalled} from './lib/uninstall.js';
-import {adminPage} from './routes/admin/index.js';
+import {createRaffle, raffleForm, renderRafflesPage, updateRaffle, upsertRaffleProduct} from './routes/admin/index.js';
 
 const PORT = Number(process.env.PORT ?? 3000);
 const app = express();
 
 app.use(express.json({type: '*/*'}));
+app.use(express.urlencoded({extended: true}));
 
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).type('application/json').send(healthResponse());
@@ -61,11 +62,45 @@ shopify.webhooks.addHandlers({
 });
 
 app.get('/', (_req: Request, res: Response) => {
-  res.status(200).type('text/html; charset=utf-8').send(adminPage());
+  res.redirect('/admin');
 });
 
-app.get('/admin', (_req: Request, res: Response) => {
-  res.status(200).type('text/html; charset=utf-8').send(adminPage());
+app.get('/admin', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const page = await renderRafflesPage(shop);
+  res.status(200).type('text/html; charset=utf-8').send(page);
+});
+
+app.get('/admin/raffles/new', (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  res.status(200).type('text/html; charset=utf-8').send(raffleForm('/admin/raffles', shop, []));
+});
+
+app.post('/admin/raffles', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const result = await createRaffle(shop, req.body);
+  if (result.errors) return res.status(400).type('text/html; charset=utf-8').send(raffleForm('/admin/raffles', shop, result.errors, req.body));
+  return res.redirect(`/admin?shop=${encodeURIComponent(shop)}`);
+});
+
+app.get('/admin/raffles/:id', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const form = raffleForm(`/admin/raffles/${req.params.id}`, shop, []);
+  res.status(200).type('text/html; charset=utf-8').send(form + `<h2>Raffle product</h2><form method="post" action="/admin/raffles/${req.params.id}/products?shop=${encodeURIComponent(shop)}"><input name="shopifyProductId" placeholder="shopifyProductId"/><input name="shopifyVariantId" placeholder="shopifyVariantId"/><input name="title" placeholder="title"/><input name="variantTitle" placeholder="variantTitle"/><input type="number" name="ticketsPerUnit" value="1"/><select name="enabled"><option value="true">enabled</option><option value="false">disabled</option></select><button type="submit">Save product</button></form>`);
+});
+
+app.post('/admin/raffles/:id', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const result = await updateRaffle(shop, req.params.id, req.body);
+  if (result.errors) return res.status(400).type('text/html; charset=utf-8').send(raffleForm(`/admin/raffles/${req.params.id}`, shop, result.errors, req.body));
+  return res.redirect(`/admin?shop=${encodeURIComponent(shop)}`);
+});
+
+app.post('/admin/raffles/:id/products', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const result = await upsertRaffleProduct(shop, req.params.id, req.body);
+  if (result.errors) return res.status(400).send(result.errors.join(','));
+  return res.redirect(`/admin/raffles/${req.params.id}?shop=${encodeURIComponent(shop)}`);
 });
 
 export default app;
