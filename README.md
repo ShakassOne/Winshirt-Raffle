@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.2.4**
+Version: **0.2.5**
 
 ## Pré-requis
 - Node.js 20+
@@ -66,6 +66,11 @@ npm run build
 npm run test
 npm run check
 ```
+
+
+## CI / Validation GitHub Actions
+- En cas de blocage local Codex (ex: `npm install` en 403), la validation de référence est le workflow GitHub Actions `CI`.
+- Le merge d'une PR dépend du statut **vert** de GitHub Actions (build, test, check).
 
 
 ## Agent workflow
