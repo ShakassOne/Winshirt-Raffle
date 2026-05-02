@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.2.7**
+Version: **0.2.8**
 
 ## Pré-requis
 - Node.js 20+
@@ -82,3 +82,11 @@ npm run check
 - La persistance Shopify (Prisma + session storage) est réactivée.
 - Modèle Prisma métier loteries/tickets V1 ajouté (schéma + migration), sans logique applicative.
 - Le statut GitHub Actions CI doit être vert avant merge.
+
+
+## Admin loteries V1 (0.2.8)
+- Routes admin: liste, création, édition de loteries.
+- Gestion des `RaffleProduct` (IDs Shopify saisis manuellement en V1).
+- Validations serveur strictes (slug, maxTickets, dates, ticketsPerUnit).
+- AuditLog minimal sur création/modification/suppression logique.
+- Non inclus: génération de tickets, webhooks commandes payées/remboursements/annulations, tirage, Theme App Extension.

@@ -6,8 +6,8 @@
 - [x] Session store Prisma
 - [x] Webhook app/uninstalled
 - [x] Modèle de données loteries
-- [ ] Admin loteries
-- [x] Association produits Shopify
+- [x] Admin loteries
+- [x] Association produits Shopify (saisie manuelle IDs en V1)
 - [ ] Webhooks commandes payées
 - [ ] Gestion remboursements/annulations
 - [ ] Blocs storefront
