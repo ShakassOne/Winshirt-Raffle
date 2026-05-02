@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.2.8**
+Version: **0.2.9**
 
 ## Pré-requis
 - Node.js 20+
@@ -84,7 +84,7 @@ npm run check
 - Le statut GitHub Actions CI doit être vert avant merge.
 
 
-## Admin loteries V1 (0.2.8)
+## Admin loteries V1 (0.2.9)
 - Routes admin: liste, création, édition de loteries.
 - Gestion des `RaffleProduct` (IDs Shopify saisis manuellement en V1).
 - Validations serveur strictes (slug, maxTickets, dates, ticketsPerUnit).

@@ -52,11 +52,19 @@ export async function upsertRaffleProduct(shop: string, raffleId: string, body: 
   const errors = validateRaffleProductInput(payload);
   if (errors.length) return {errors};
   const product = await prisma.$transaction(async (tx) => {
-    const upserted = await tx.raffleProduct.upsert({
-      where: {raffleId_shopifyProductId_shopifyVariantId: {raffleId, shopifyProductId: payload.shopifyProductId, shopifyVariantId: payload.shopifyVariantId ?? null}},
-      update: payload,
-      create: {raffleId, ...payload},
+    const existing = await tx.raffleProduct.findFirst({
+      where: {
+        raffleId,
+        shopifyProductId: payload.shopifyProductId,
+        shopifyVariantId: payload.shopifyVariantId ?? null,
+      },
+      select: {id: true},
     });
+
+    const upserted = existing
+      ? await tx.raffleProduct.update({where: {id: existing.id}, data: payload})
+      : await tx.raffleProduct.create({data: {raffleId, ...payload}});
+
     await writeAuditLog(tx, shopId, upserted.enabled ? AuditActionType.UPDATE : AuditActionType.DELETE, 'RaffleProduct', upserted.id, payload);
     return upserted;
   });
