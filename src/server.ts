@@ -1,6 +1,6 @@
 import express, {Request, Response} from 'express';
 import {DeliveryMethod} from '@shopify/shopify-api';
-import {shopify, prisma} from './lib/shopify.js';
+import {shopify} from './lib/shopify.js';
 import {healthResponse} from './routes/public/health.js';
 import {adminPage} from './routes/admin/index.js';
 
@@ -20,12 +20,6 @@ app.get('/auth', async (req: Request, res: Response) => {
 
 app.get('/auth/callback', async (req: Request, res: Response) => {
   const callback = await shopify.auth.callback({rawRequest: req, rawResponse: res});
-
-  await prisma.shop.upsert({
-    where: {shopDomain: callback.session.shop},
-    update: {accessToken: callback.session.accessToken ?? '', uninstalledAt: null},
-    create: {shopDomain: callback.session.shop, accessToken: callback.session.accessToken ?? ''}
-  });
 
   await shopify.webhooks.register({session: callback.session});
 
@@ -53,8 +47,6 @@ shopify.webhooks.addHandlers({
     deliveryMethod: webhookDeliveryMethod,
     callbackUrl: '/webhooks',
     callback: async (_topic: string, shop: string) => {
-      await prisma.shop.updateMany({where: {shopDomain: shop}, data: {uninstalledAt: new Date()}});
-      await prisma.session.deleteMany({where: {shop}});
       console.log(`[webhook] app/uninstalled processed for ${shop}`);
     }
   }
