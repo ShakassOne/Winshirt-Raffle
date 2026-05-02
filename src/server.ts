@@ -2,6 +2,8 @@ import express, {Request, Response} from 'express';
 import {DeliveryMethod} from '@shopify/shopify-api';
 import {shopify} from './lib/shopify.js';
 import {healthResponse} from './routes/public/health.js';
+import {prisma} from './lib/prisma.js';
+import {handleAppUninstalled} from './lib/uninstall.js';
 import {adminPage} from './routes/admin/index.js';
 
 const PORT = Number(process.env.PORT ?? 3000);
@@ -47,7 +49,13 @@ shopify.webhooks.addHandlers({
     deliveryMethod: webhookDeliveryMethod,
     callbackUrl: '/webhooks',
     callback: async (_topic: string, shop: string) => {
-      console.log(`[webhook] app/uninstalled processed for ${shop}`);
+      try {
+        await handleAppUninstalled(shop, {shop: prisma.shop, session: prisma.session});
+        console.log(`[webhook] app/uninstalled processed for ${shop}`);
+      } catch (error) {
+        console.error(`[webhook] app/uninstalled failed for ${shop}`, error);
+        throw error;
+      }
     }
   }
 });
