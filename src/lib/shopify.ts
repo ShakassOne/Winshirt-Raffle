@@ -1,14 +1,14 @@
 import '@shopify/shopify-api/adapters/node';
 import {LATEST_API_VERSION, shopifyApi} from '@shopify/shopify-api';
 import {PrismaClient} from '@prisma/client';
-import {PrismaSessionStorage} from '@shopify/shopify-app-session-storage-prisma';
+import {inMemorySessionStorage} from './sessionStorage.js';
 import {readEnv} from '../config/env.js';
 
 const env = readEnv();
 const appUrl = env.SHOPIFY_APP_URL?.trim() || 'https://example.com';
 const hostName = new URL(appUrl).host;
 const prisma = new PrismaClient();
-const sessionStorage = new PrismaSessionStorage(prisma);
+const sessionStorage = inMemorySessionStorage;
 
 export const shopify = shopifyApi({
   apiKey: env.SHOPIFY_API_KEY,
