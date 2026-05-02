@@ -1,11 +1,24 @@
-import { readEnv } from "../config/env.js";
+import '@shopify/shopify-api/adapters/node';
+import {shopifyApi, LATEST_API_VERSION, AppDistribution} from '@shopify/shopify-api';
+import {PrismaClient} from '@prisma/client';
+import {PrismaSessionStorage} from '@shopify/shopify-app-session-storage-prisma';
+import {readEnv} from '../config/env.js';
 
-export function getShopifyAuthConfig() {
-  const env = readEnv();
-  return {
-    apiKey: env.SHOPIFY_API_KEY,
-    apiSecret: env.SHOPIFY_API_SECRET,
-    scopes: env.SCOPES.split(",").map((scope) => scope.trim()).filter(Boolean),
-    appUrl: env.SHOPIFY_APP_URL
-  };
-}
+const env = readEnv();
+const prisma = new PrismaClient();
+const sessionStorage = new PrismaSessionStorage(prisma);
+
+export const shopify = shopifyApi({
+  apiKey: env.SHOPIFY_API_KEY,
+  apiSecretKey: env.SHOPIFY_API_SECRET,
+  scopes: env.SCOPES.split(',').map((scope) => scope.trim()).filter(Boolean),
+  hostName: new URL(env.SHOPIFY_APP_URL).host,
+  hostScheme: 'https',
+  isEmbeddedApp: true,
+  apiVersion: LATEST_API_VERSION,
+  isCustomStoreApp: false,
+  appDistribution: AppDistribution.AppStore,
+  sessionStorage,
+});
+
+export {prisma};
