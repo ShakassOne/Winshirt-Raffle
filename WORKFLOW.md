@@ -9,6 +9,7 @@
    - Validation explicite Agent Testeur / Debugger.
 4. **Pas de merge si les tests n’ont pas été exécutés**
    - Les commandes exécutées doivent être tracées dans la PR.
+   - Si GitHub Actions est **rouge**, la PR ne doit pas être mergée.
 5. **Pas de merge si la PR modifie des fichiers hors scope**
    - Vérification obligatoire de l’onglet **Files changed**.
 6. **Aucune correction locale manuelle par le propriétaire du repo**
@@ -21,7 +22,8 @@
 ## Pipeline recommandé
 1. Architecte définit scope + critères d’acceptation.
 2. Développeur implémente dans sa branche de mission.
-3. Testeur exécute `npm install`, `npm run build`, `npm run test`, `npm run check`.
+3. Testeur exécute `npm install`, `npm run build`, `npm run test`, `npm run check` (si possible en local).
+   - En cas de blocage local Codex (403 npm), la validation finale vient de GitHub Actions CI (source de vérité pour la PR).
 4. Reviewer valide scope + qualité + onglet Files changed.
 5. Release confirme validations puis autorise le merge.
 
