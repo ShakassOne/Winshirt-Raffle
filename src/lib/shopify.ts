@@ -1,5 +1,5 @@
 import '@shopify/shopify-api/adapters/node';
-import {shopifyApi, LATEST_API_VERSION} from '@shopify/shopify-api';
+import {LATEST_API_VERSION, shopifyApi} from '@shopify/shopify-api';
 import {PrismaClient} from '@prisma/client';
 import {PrismaSessionStorage} from '@shopify/shopify-app-session-storage-prisma';
 import {readEnv} from '../config/env.js';

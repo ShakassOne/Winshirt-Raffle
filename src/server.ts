@@ -46,9 +46,11 @@ app.post('/webhooks', async (req: Request, res: Response) => {
   }
 });
 
+const webhookDeliveryMethod = DeliveryMethod.Http;
+
 shopify.webhooks.addHandlers({
   APP_UNINSTALLED: {
-    deliveryMethod: DeliveryMethod.Http,
+    deliveryMethod: webhookDeliveryMethod,
     callbackUrl: '/webhooks',
     callback: async (_topic: string, shop: string) => {
       await prisma.shop.updateMany({where: {shopDomain: shop}, data: {uninstalledAt: new Date()}});
