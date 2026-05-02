@@ -1,4 +1,5 @@
 import express, {Request, Response} from 'express';
+import {DeliveryMethod} from '@shopify/shopify-api';
 import {shopify, prisma} from './lib/shopify.js';
 import {healthResponse} from './routes/public/health.js';
 import {adminPage} from './routes/admin/index.js';
@@ -47,7 +48,7 @@ app.post('/webhooks', async (req: Request, res: Response) => {
 
 shopify.webhooks.addHandlers({
   APP_UNINSTALLED: {
-    deliveryMethod: 'http',
+    deliveryMethod: DeliveryMethod.Http,
     callbackUrl: '/webhooks',
     callback: async (_topic: string, shop: string) => {
       await prisma.shop.updateMany({where: {shopDomain: shop}, data: {uninstalledAt: new Date()}});
