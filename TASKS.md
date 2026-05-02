@@ -2,6 +2,9 @@
 
 - [x] Setup app Shopify
 - [x] Setup Prisma/PostgreSQL
+- [x] Auth Shopify embarquée
+- [x] Session store Prisma
+- [x] Webhook app/uninstalled
 - [ ] Modèle de données loteries
 - [ ] Admin loteries
 - [ ] Association produits Shopify

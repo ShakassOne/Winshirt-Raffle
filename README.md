@@ -1,21 +1,21 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.1.0**
+Version: **0.2.0**
 
 ## Pré-requis
 - Node.js 20+
 - npm 10+
 - PostgreSQL 15+
-- Shopify Partner account + Custom App config
+- Shopify Partner account
+- Une boutique de développement Shopify
 
-## Installation
+## Installation locale
 ```bash
 npm install
 cp .env.example .env
 ```
 
 ## Variables d’environnement
-Voir `.env.example`:
 - `SHOPIFY_API_KEY`
 - `SHOPIFY_API_SECRET`
 - `SCOPES`
@@ -23,41 +23,46 @@ Voir `.env.example`:
 - `DATABASE_URL`
 - `SESSION_SECRET`
 
-## Commandes de développement
+## Prisma
+```bash
+npm run prisma:generate
+npm run prisma:migrate -- --name shopify_auth_base
+```
+
+## Lancer l’application
 ```bash
 npm run dev
+```
+
+## OAuth Shopify embedded
+1. Créer/configurer l’app dans Shopify Partner.
+2. Mettre `SHOPIFY_APP_URL` avec l’URL publique HTTPS de l’app.
+3. Dans la config Shopify App, définir l’URL de redirection OAuth: `https://<app-url>/auth/callback`.
+4. Ouvrir: `https://<app-url>/auth?shop=<your-dev-store>.myshopify.com`
+5. Après installation, l’admin embarqué affiche **WinShirt Raffle**.
+
+## Webhook `app/uninstalled`
+- Le webhook est enregistré après OAuth callback.
+- Endpoint webhook: `POST /webhooks`
+- Effets: boutique marquée désinstallée (`uninstalledAt`) et suppression des sessions Shopify associées.
+- Vérifier dans les logs serveur: `[webhook] app/uninstalled processed for <shop>`.
+
+## Healthcheck
+```bash
+curl http://localhost:3000/health
+```
+Réponse attendue:
+```json
+{
+  "ok": true,
+  "app": "winshirt-raffle-shopify-app"
+}
+```
+
+## Vérifications
+```bash
 npm run typecheck
 npm run build
 npm run test
 npm run check
 ```
-
-## Commandes Prisma
-```bash
-npx prisma generate
-npx prisma migrate dev --name init
-```
-
-## Lancer l’app en local
-```bash
-npm run dev
-```
-Puis ouvrir:
-- Admin de base: `http://localhost:3000/admin`
-- Health check: `http://localhost:3000/health`
-
-## Ce qui est déjà fait
-- Base applicative TypeScript structurée (routes admin/publiques, services, repositories, webhooks).
-- Configuration d’environnement centralisée.
-- Route publique `GET /health`.
-- Première page admin avec le titre **WinShirt Raffle**.
-- Prisma configuré avec PostgreSQL + modèle minimal `Shop`.
-- Documentation projet initiale (`PROJECT.md`, `RULES.md`, `TASKS.md`).
-
-## Ce qui n’est pas encore fait
-- Logique métier loteries/tickets.
-- Génération de tickets sur commandes payées.
-- Webhooks Shopify réels (vérification signature incluse).
-- UI Polaris complète.
-- Export CSV, audit logs et tirage sécurisé.
-- Theme App Extension.

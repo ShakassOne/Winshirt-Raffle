@@ -1,6 +1,6 @@
 {
   "name": "winshirt-raffle-shopify-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,9 +9,21 @@
     "start": "node dist/server.js",
     "check": "npm run typecheck && npm run test && npm run build",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "NODE_ENV=test node --test dist/tests/health.test.js"
+    "test": "npm run build && NODE_ENV=test node --test dist/tests/health.test.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.8.2",
+    "@shopify/shopify-api": "^11.11.0",
+    "@shopify/shopify-app-session-storage-prisma": "^5.2.0",
+    "express": "^4.21.2"
   },
   "devDependencies": {
-    "typescript": "^6.0.3"
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.15.18",
+    "prisma": "^6.8.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.3"
   }
 }
