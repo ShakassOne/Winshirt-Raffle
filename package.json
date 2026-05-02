@@ -1,6 +1,6 @@
 {
   "name": "winshirt-raffle-shopify-app",
-  "version": "0.2.5",
+  "version": "0.2.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +16,7 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@shopify/shopify-api": "^11.11.0",
+    "@shopify/shopify-app-session-storage-prisma": "^5.2.0",
     "express": "^4.21.2"
   },
   "devDependencies": {
