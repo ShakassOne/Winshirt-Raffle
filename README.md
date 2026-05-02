@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.2.1**
+Version: **0.2.2**
 
 ## Pré-requis
 - Node.js 20+
@@ -66,3 +66,9 @@ npm run build
 npm run test
 npm run check
 ```
+
+
+## Agent workflow
+- Voir `AGENTS.md` pour les rôles et responsabilités multi-agents.
+- Voir `WORKFLOW.md` pour le process de branche/PR/merge obligatoire.
+- Voir `CHECKLIST_PR.md` pour le template de validation à copier dans chaque PR.
