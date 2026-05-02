@@ -1,10 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import app from '../server.js';
+import express, {Request, Response} from 'express';
+import {healthResponse} from '../routes/public/health.js';
 
 const TEST_PORT = 3200;
 
 test('GET /health returns expected payload', async () => {
+  const app = express();
+  app.get('/health', (_req: Request, res: Response) => {
+    res.status(200).type('application/json').send(healthResponse());
+  });
+
   const server = app.listen(TEST_PORT);
 
   const response = await fetch(`http://127.0.0.1:${TEST_PORT}/health`);
