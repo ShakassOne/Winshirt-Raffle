@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.2.5**
+Version: **0.2.4**
 
 ## Pré-requis
 - Node.js 20+
