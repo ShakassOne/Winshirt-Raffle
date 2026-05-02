@@ -10,9 +10,9 @@ datasource db {
 model Shop {
   id            String   @id @default(cuid())
   shopDomain    String   @unique
-  accessToken   String
   installedAt   DateTime @default(now())
   uninstalledAt DateTime?
+  isInstalled   Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
@@ -33,4 +33,6 @@ model Session {
   locale        String?
   collaborator  Boolean?
   emailVerified Boolean?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }

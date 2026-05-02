@@ -1,5 +1,7 @@
 import '@shopify/shopify-api/adapters/node';
 import {LATEST_API_VERSION, shopifyApi} from '@shopify/shopify-api';
+import {prisma} from './prisma.js';
+import {PrismaSessionStorage} from './session-storage.js';
 import {readEnv} from '../config/env.js';
 
 const env = readEnv();
@@ -15,4 +17,5 @@ export const shopify = shopifyApi({
   isEmbeddedApp: true,
   apiVersion: LATEST_API_VERSION,
   isCustomStoreApp: false,
+  sessionStorage: new PrismaSessionStorage(prisma.session),
 });

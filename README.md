@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.2.5**
+Version: **0.2.6**
 
 ## Pré-requis
 - Node.js 20+
@@ -77,3 +77,8 @@ npm run check
 - Voir `AGENTS.md` pour les rôles et responsabilités multi-agents.
 - Voir `WORKFLOW.md` pour le process de branche/PR/merge obligatoire.
 - Voir `CHECKLIST_PR.md` pour le template de validation à copier dans chaque PR.
+
+## Portée produit actuelle
+- La persistance Shopify (Prisma + session storage) est réactivée.
+- Les fonctionnalités loteries/tickets ne sont pas encore commencées.
+- Le statut GitHub Actions CI doit être vert avant merge.

@@ -16,3 +16,5 @@
 - [ ] Audit logs
 - [ ] Tirage au sort sécurisé
 - [ ] Déploiement Railway
+
+- [x] CI GitHub Actions au vert obligatoire avant merge

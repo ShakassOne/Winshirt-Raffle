@@ -14,3 +14,9 @@
 
 ## Priorité produit
 - **Ne pas commencer** les loteries/tickets tant que le socle Shopify n’est pas validé.
+
+## Mise à jour 0.2.6
+- Prisma/session storage Shopify réintroduits avec persistance PostgreSQL.
+- Webhook `app/uninstalled` remet `Shop.isInstalled` à `false`, renseigne `uninstalledAt` et supprime les sessions.
+- Les modules loteries/tickets ne sont **pas** commencés.
+- GitHub Actions CI reste le gate obligatoire avant merge.
