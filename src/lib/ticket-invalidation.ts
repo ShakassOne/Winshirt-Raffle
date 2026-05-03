@@ -1,4 +1,4 @@
-import {AuditActionType, Prisma, TicketStatus} from '@prisma/client';
+import {AuditActionType, Prisma} from '@prisma/client';
 import {prisma} from './prisma.js';
 import {writeAuditLog} from './raffle-admin.js';
 
@@ -9,7 +9,7 @@ export type InvalidationReason = 'order_cancelled' | 'refund_total';
 
 export async function recalculateRaffleCounters(tx: Tx, raffleIds: string[]): Promise<void> {
   for (const raffleId of raffleIds) {
-    const validCount = await tx.ticket.count({where: {raffleId, status: TicketStatus.VALID}});
+    const validCount = await tx.ticket.count({where: {raffleId, status: 'VALID'}});
     const raffle = await tx.raffle.findUnique({where: {id: raffleId}});
     if (!raffle) continue;
     await tx.raffle.update({
@@ -25,7 +25,7 @@ export async function recalculateRaffleCounters(tx: Tx, raffleIds: string[]): Pr
 export async function invalidateValidTicketsByOrder(
   shopDomain: string,
   shopifyOrderId: string,
-  toStatus: TicketStatus.CANCELLED | TicketStatus.REFUNDED,
+  toStatus: 'CANCELLED' | 'REFUNDED',
   auditReason: InvalidationReason,
   successAuditReason: 'order_cancelled_processed' | 'refund_processed',
   db: DbClient = prisma,
@@ -40,7 +40,7 @@ export async function invalidateValidTicketsByOrder(
       return 'order_not_found' as const;
     }
 
-    const validTickets = await tx.ticket.findMany({where: {orderId: order.id, status: TicketStatus.VALID}});
+    const validTickets = await tx.ticket.findMany({where: {orderId: order.id, status: 'VALID'}});
     if (validTickets.length === 0) {
       await writeAuditLog(tx, shop.id, AuditActionType.UPDATE, 'ShopifyOrder', order.id, {shopifyOrderId, reason: 'duplicate_no_valid_tickets'});
       return 'no_valid_tickets' as const;
@@ -57,8 +57,8 @@ export async function invalidateValidTicketsByOrder(
       reason: successAuditReason,
       invalidationReason: auditReason,
       raffleIds,
-      ticketsCancelled: toStatus === TicketStatus.CANCELLED ? validTickets.length : 0,
-      ticketsRefunded: toStatus === TicketStatus.REFUNDED ? validTickets.length : 0,
+      ticketsCancelled: toStatus === 'CANCELLED' ? validTickets.length : 0,
+      ticketsRefunded: toStatus === 'REFUNDED' ? validTickets.length : 0,
     });
 
     return 'processed' as const;
