@@ -2,6 +2,7 @@ import express, {Request, Response} from 'express';
 import {DeliveryMethod} from '@shopify/shopify-api';
 import {shopify} from './lib/shopify.js';
 import {healthResponse} from './routes/public/health.js';
+import {renderCustomerTicketsPage} from './routes/public/tickets.js';
 import {prisma} from './lib/prisma.js';
 import {handleAppUninstalled} from './lib/uninstall.js';
 import {createRaffle, raffleForm, renderRafflesPage, updateRaffle, upsertRaffleProduct} from './routes/admin/index.js';
@@ -20,6 +21,20 @@ app.get('/health', (_req: Request, res: Response) => {
   res.status(200).type('application/json').send(healthResponse());
 });
 
+
+app.get('/tickets', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const page = await renderCustomerTicketsPage(shop);
+  res.status(200).type('text/html; charset=utf-8').send(page);
+});
+
+app.post('/tickets', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const email = String(req.body.email ?? '');
+  const orderReference = String(req.body.orderReference ?? '');
+  const page = await renderCustomerTicketsPage(shop, email, orderReference, true);
+  res.status(200).type('text/html; charset=utf-8').send(page);
+});
 app.get('/auth', async (req: Request, res: Response) => {
   const shop = String(req.query.shop ?? '');
   await shopify.auth.begin({shop, callbackPath: '/auth/callback', isOnline: false, rawRequest: req, rawResponse: res});

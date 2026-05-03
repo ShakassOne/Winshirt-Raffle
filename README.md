@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.3.6**
+Version: **0.3.7**
 
 ## Pré-requis
 - Node.js 20+
@@ -116,3 +116,10 @@ npm run check
 ## Correction typage TS (0.3.4)
 - Correction des erreurs TypeScript `TS7006` (paramètres de callbacks explicitement typés) sur les écrans/services admin tickets/orders.
 - Aucun changement de scope fonctionnel (lecture seule uniquement).
+
+
+## Affichage client tickets V1 (0.3.7)
+- Route publique en lecture seule: `GET /tickets` + formulaire de recherche `POST /tickets` (email + numéro de commande / order id).
+- Sécurité: aucune recherche email seule, email normalisé (trim/lowercase), et isolation stricte par boutique (`shopDomain` => `shopId`).
+- Données affichées: loterie, numéro ticket, statut, source, commande, date de création, message explicite si ticket `CANCELLED`/`REFUNDED`.
+- Non inclus: modification ticket, compte client Shopify avancé, export CSV, tirage, Theme App Extension.
