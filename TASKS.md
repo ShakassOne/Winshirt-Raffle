@@ -9,7 +9,7 @@
 - [x] Admin loteries
 - [x] Association produits Shopify (saisie manuelle IDs en V1)
 - [x] Webhooks commandes payées
-- [ ] Gestion remboursements/annulations (refunds/create + orders/cancelled non implémentés)
+- [x] Gestion remboursements/annulations (refunds/create + orders/cancelled implémentés, partiel non traçable journalisé)
 - [ ] Blocs storefront
 - [ ] Affichage tickets client
 - [ ] Export CSV
