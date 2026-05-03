@@ -21,10 +21,7 @@ export type OrderListItemWithStats = {
   ticketStats: {total: number; valid: number; refundedOrCancelled: number};
 };
 
-type OrderWithTicketStatsSource = {
-  _count: {tickets: number};
-  tickets: OrderTicketStatusRow[];
-};
+type OrderWithTicketStatsSource = Omit<OrderListItemWithStats, 'ticketStats'>;
 type OrderTicketRef = {id: string};
 
 function normalizePage(page?: number, pageSize?: number) {
@@ -65,7 +62,18 @@ export async function listOrdersForShop(shop: string, filters: OrderFilters = {}
   const [items, total] = await Promise.all([
     db.shopifyOrder.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        shopifyOrderId: true,
+        shopifyOrderNumber: true,
+        customerEmail: true,
+        financialStatus: true,
+        fulfillmentStatus: true,
+        totalPrice: true,
+        currency: true,
+        processedAt: true,
+        createdAt: true,
+        updatedAt: true,
         _count: {select: {tickets: true}},
         tickets: {select: {status: true}},
       },

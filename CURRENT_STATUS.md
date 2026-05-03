@@ -61,3 +61,8 @@
 ## Mise à jour 0.3.5
 - Correction de typage TS2345 sur le rendu `/admin/orders` en utilisant un type enrichi aligné avec la sortie service.
 - Aucun changement de scope fonctionnel.
+
+
+## Mise à jour 0.3.6
+- Correction TypeScript TS2322 sur `listOrdersForShop`: sélection Prisma alignée sur le type enrichi retourné.
+- Aucun changement fonctionnel de scope.
