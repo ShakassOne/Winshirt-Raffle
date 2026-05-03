@@ -1,9 +1,16 @@
-import {TicketStatus} from '@prisma/client';
+import {AuditLog, TicketStatus} from '@prisma/client';
 import {prisma} from './prisma.js';
 import {resolveCurrentShopId} from './shop-context.js';
 
 export type TicketFilters = { raffleId?: string; status?: TicketStatus; email?: string; ticketNumber?: number; page?: number; pageSize?: number };
 export type OrderFilters = { email?: string; shopifyOrderId?: string; shopifyOrderNumber?: string; page?: number; pageSize?: number };
+
+type OrderTicketStatusRow = {status: TicketStatus};
+type OrderWithTicketStatsSource = {
+  _count: {tickets: number};
+  tickets: OrderTicketStatusRow[];
+};
+type OrderTicketRef = {id: string};
 
 function normalizePage(page?: number, pageSize?: number) {
   const take = Math.min(Math.max(pageSize ?? 25, 1), 100);
@@ -54,12 +61,12 @@ export async function listOrdersForShop(shop: string, filters: OrderFilters = {}
     db.shopifyOrder.count({where}),
   ]);
 
-  const mapped = items.map((o) => ({
+  const mapped = (items as OrderWithTicketStatsSource[]).map((o: OrderWithTicketStatsSource) => ({
     ...o,
     ticketStats: {
       total: o._count.tickets,
-      valid: o.tickets.filter((t) => t.status === TicketStatus.VALID).length,
-      refundedOrCancelled: o.tickets.filter((t) => t.status === TicketStatus.REFUNDED || t.status === TicketStatus.CANCELLED).length,
+      valid: o.tickets.filter((t: OrderTicketStatusRow) => t.status === TicketStatus.VALID).length,
+      refundedOrCancelled: o.tickets.filter((t: OrderTicketStatusRow) => t.status === TicketStatus.REFUNDED || t.status === TicketStatus.CANCELLED).length,
     },
   }));
 
@@ -71,7 +78,7 @@ export async function getOrderDetailsForShop(shop: string, orderId: string, db: 
   const order = await db.shopifyOrder.findFirst({where: {id: orderId, shopId}, include: {tickets: {orderBy: {ticketNumber: 'asc'}}, shop: {select: {shopDomain: true}}}});
   if (!order) return null;
 
-  const logs = await db.auditLog.findMany({where: {shopId, OR: [{entityType: 'ShopifyOrder', entityId: order.id}, {entityType: 'Ticket', entityId: {in: order.tickets.map((t) => t.id)}}]}, orderBy: {createdAt: 'desc'}, take: 100});
+  const logs = await db.auditLog.findMany({where: {shopId, OR: [{entityType: 'ShopifyOrder', entityId: order.id}, {entityType: 'Ticket', entityId: {in: (order.tickets as OrderTicketRef[]).map((t: OrderTicketRef) => t.id)}}]}, orderBy: {createdAt: 'desc'}, take: 100});
   return {order, logs};
 }
 

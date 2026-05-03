@@ -51,3 +51,8 @@
 - Commandes: liste + filtres (email, shopifyOrderId, shopifyOrderNumber), compteurs tickets (total, VALID, REFUNDED/CANCELLED), détail commande et ticket.
 - Sécurité shop stricte: requêtes bornées au `shopId` courant.
 - Toujours non fait: export CSV, modification manuelle des tickets, tirage, affichage client, Theme App Extension.
+
+
+## Mise à jour 0.3.4
+- Correction de typage TypeScript pour supprimer les erreurs `TS7006` sur les callbacks map/filter côté admin tickets/orders.
+- Aucun changement fonctionnel du périmètre (toujours lecture seule, sans export CSV, sans tirage, sans affichage client).

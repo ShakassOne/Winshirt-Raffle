@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.3.3**
+Version: **0.3.4**
 
 ## Pré-requis
 - Node.js 20+
@@ -111,3 +111,8 @@ npm run check
 - Filtres simples: email, statut ticket, numéro ticket, identifiants commande Shopify.
 - Sécurité multi-shop: toutes les requêtes sont filtrées par boutique courante.
 - Non inclus explicitement: export CSV, modification manuelle des tickets, tirage, affichage client, Theme App Extension.
+
+
+## Correction typage TS (0.3.4)
+- Correction des erreurs TypeScript `TS7006` (paramètres de callbacks explicitement typés) sur les écrans/services admin tickets/orders.
+- Aucun changement de scope fonctionnel (lecture seule uniquement).
