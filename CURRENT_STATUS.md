@@ -27,3 +27,10 @@
 - Validations serveur (slug, maxTickets, dates, ticketsPerUnit) ajoutées.
 - AuditLog minimal ajouté sur create/update raffle et create/update/disable raffle product.
 - Tickets non générés, webhooks commandes non implémentés dans cette version.
+
+
+## Mise à jour 0.3.0
+- Webhook `orders/paid` implémenté avec service dédié `handleOrderPaid(shopDomain, payload)`.
+- Génération automatique de tickets avec idempotence sur `shopifyOrderId`.
+- Gestion du matching produit/variant, contrôle de capacité `maxTickets`, mise à jour des compteurs et AuditLog.
+- Toujours non implémenté: `refunds/create`, `orders/cancelled`, affichage client, tirage, Theme App Extension.

@@ -8,8 +8,8 @@
 - [x] Modèle de données loteries
 - [x] Admin loteries
 - [x] Association produits Shopify (saisie manuelle IDs en V1)
-- [ ] Webhooks commandes payées
-- [ ] Gestion remboursements/annulations
+- [x] Webhooks commandes payées
+- [ ] Gestion remboursements/annulations (refunds/create + orders/cancelled non implémentés)
 - [ ] Blocs storefront
 - [ ] Affichage tickets client
 - [ ] Export CSV

@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.2.9**
+Version: **0.3.0**
 
 ## Pré-requis
 - Node.js 20+
@@ -90,3 +90,10 @@ npm run check
 - Validations serveur strictes (slug, maxTickets, dates, ticketsPerUnit).
 - AuditLog minimal sur création/modification/suppression logique.
 - Non inclus: génération de tickets, webhooks commandes payées/remboursements/annulations, tirage, Theme App Extension.
+
+
+## Webhook `orders/paid` (0.3.0)
+- Le webhook `orders/paid` est enregistré et traité via `POST /webhooks`.
+- Le service métier crée `ShopifyOrder`, génère des tickets `PURCHASE/VALID`, met à jour les compteurs raffle et journalise dans `AuditLog`.
+- Idempotence: une commande déjà connue (`shopifyOrderId`) retourne `skipped_duplicate` et ne regénère aucun ticket.
+- Non inclus dans cette version: `refunds/create`, `orders/cancelled`, affichage client, tirage, Theme App Extension.
