@@ -5,6 +5,7 @@ import {healthResponse} from './routes/public/health.js';
 import {prisma} from './lib/prisma.js';
 import {handleAppUninstalled} from './lib/uninstall.js';
 import {createRaffle, raffleForm, renderRafflesPage, updateRaffle, upsertRaffleProduct} from './routes/admin/index.js';
+import {renderOrderDetailsPage, renderOrdersPage, renderTicketDetailsPage, renderTicketsPage} from './routes/admin/tickets-orders.js';
 import {handleOrderPaid} from './lib/order-paid.js';
 import {handleOrderCancelled} from './lib/order-cancelled.js';
 import {handleRefundCreated} from './lib/refund-created.js';
@@ -108,6 +109,30 @@ app.get('/admin', async (req: Request, res: Response) => {
   res.status(200).type('text/html; charset=utf-8').send(page);
 });
 
+
+app.get('/admin/tickets', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const page = await renderTicketsPage(shop, req.query);
+  res.status(200).type('text/html; charset=utf-8').send(page);
+});
+
+app.get('/admin/tickets/:id', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const page = await renderTicketDetailsPage(shop, req.params.id);
+  res.status(200).type('text/html; charset=utf-8').send(page);
+});
+
+app.get('/admin/orders', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const page = await renderOrdersPage(shop, req.query);
+  res.status(200).type('text/html; charset=utf-8').send(page);
+});
+
+app.get('/admin/orders/:id', async (req: Request, res: Response) => {
+  const shop = String(req.query.shop ?? '');
+  const page = await renderOrderDetailsPage(shop, req.params.id);
+  res.status(200).type('text/html; charset=utf-8').send(page);
+});
 app.get('/admin/raffles/new', (req: Request, res: Response) => {
   const shop = String(req.query.shop ?? '');
   res.status(200).type('text/html; charset=utf-8').send(raffleForm('/admin/raffles', shop, []));

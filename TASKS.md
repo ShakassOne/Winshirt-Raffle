@@ -12,6 +12,7 @@
 - [x] Gestion remboursements/annulations (refunds/create + orders/cancelled implémentés, partiel non traçable journalisé)
 - [ ] Blocs storefront
 - [ ] Affichage tickets client
+- [x] Admin tickets/orders lecture seule
 - [ ] Export CSV
 - [x] Audit logs
 - [ ] Tirage au sort sécurisé

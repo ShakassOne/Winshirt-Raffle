@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.3.2**
+Version: **0.3.6**
 
 ## Pré-requis
 - Node.js 20+
@@ -104,3 +104,15 @@ npm run check
 - `refunds/create` implémenté en V1 sûre: remboursement total => tickets `VALID` passent `REFUNDED`; remboursement partiel non traçable => `AuditLog` warning `refund_ignored_partial_unhandled` sans invalidation approximative.
 - Idempotence: second webhook sur la même commande retourne `duplicate_no_valid_tickets`/`no_valid_tickets` selon le service et ne double-décrémente pas.
 - Non inclus: affichage client, tirage, export CSV, Theme App Extension.
+
+
+## Admin Tickets / Orders V1 (0.3.3)
+- Routes admin lecture seule ajoutées: `/admin/tickets`, `/admin/orders`, `/admin/orders/:id`, `/admin/tickets/:id`.
+- Filtres simples: email, statut ticket, numéro ticket, identifiants commande Shopify.
+- Sécurité multi-shop: toutes les requêtes sont filtrées par boutique courante.
+- Non inclus explicitement: export CSV, modification manuelle des tickets, tirage, affichage client, Theme App Extension.
+
+
+## Correction typage TS (0.3.4)
+- Correction des erreurs TypeScript `TS7006` (paramètres de callbacks explicitement typés) sur les écrans/services admin tickets/orders.
+- Aucun changement de scope fonctionnel (lecture seule uniquement).

@@ -43,3 +43,26 @@
 - Compteurs loterie recalculés depuis les tickets `VALID` (pas de décrément fragile).
 - Limitation V1: remboursement partiel non traçable au `line_item_id` => log `refund_ignored_partial_unhandled` sans invalidation partielle approximative.
 - Toujours non fait: affichage client, tirage, export CSV, Theme App Extension.
+
+
+## Mise à jour 0.3.3
+- Admin Tickets / Orders V1 ajouté en lecture seule.
+- Tickets: liste + filtres (raffleId, status, email, ticketNumber) + pagination simple.
+- Commandes: liste + filtres (email, shopifyOrderId, shopifyOrderNumber), compteurs tickets (total, VALID, REFUNDED/CANCELLED), détail commande et ticket.
+- Sécurité shop stricte: requêtes bornées au `shopId` courant.
+- Toujours non fait: export CSV, modification manuelle des tickets, tirage, affichage client, Theme App Extension.
+
+
+## Mise à jour 0.3.4
+- Correction de typage TypeScript pour supprimer les erreurs `TS7006` sur les callbacks map/filter côté admin tickets/orders.
+- Aucun changement fonctionnel du périmètre (toujours lecture seule, sans export CSV, sans tirage, sans affichage client).
+
+
+## Mise à jour 0.3.5
+- Correction de typage TS2345 sur le rendu `/admin/orders` en utilisant un type enrichi aligné avec la sortie service.
+- Aucun changement de scope fonctionnel.
+
+
+## Mise à jour 0.3.6
+- Correction TypeScript TS2322 sur `listOrdersForShop`: sélection Prisma alignée sur le type enrichi retourné.
+- Aucun changement fonctionnel de scope.
