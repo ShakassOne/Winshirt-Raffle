@@ -56,3 +56,8 @@
 ## Mise à jour 0.3.4
 - Correction de typage TypeScript pour supprimer les erreurs `TS7006` sur les callbacks map/filter côté admin tickets/orders.
 - Aucun changement fonctionnel du périmètre (toujours lecture seule, sans export CSV, sans tirage, sans affichage client).
+
+
+## Mise à jour 0.3.5
+- Correction de typage TS2345 sur le rendu `/admin/orders` en utilisant un type enrichi aligné avec la sortie service.
+- Aucun changement de scope fonctionnel.

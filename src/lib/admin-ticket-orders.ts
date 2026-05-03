@@ -6,6 +6,21 @@ export type TicketFilters = { raffleId?: string; status?: TicketStatus; email?: 
 export type OrderFilters = { email?: string; shopifyOrderId?: string; shopifyOrderNumber?: string; page?: number; pageSize?: number };
 
 type OrderTicketStatusRow = {status: TicketStatus};
+export type OrderListItemWithStats = {
+  id: string;
+  shopifyOrderId: string;
+  shopifyOrderNumber: string | null;
+  customerEmail: string | null;
+  financialStatus: string | null;
+  fulfillmentStatus: string | null;
+  totalPrice: unknown;
+  currency: string | null;
+  processedAt: Date | null;
+  _count: {tickets: number};
+  tickets: OrderTicketStatusRow[];
+  ticketStats: {total: number; valid: number; refundedOrCancelled: number};
+};
+
 type OrderWithTicketStatsSource = {
   _count: {tickets: number};
   tickets: OrderTicketStatusRow[];
@@ -61,7 +76,7 @@ export async function listOrdersForShop(shop: string, filters: OrderFilters = {}
     db.shopifyOrder.count({where}),
   ]);
 
-  const mapped = (items as OrderWithTicketStatsSource[]).map((o: OrderWithTicketStatsSource) => ({
+  const mapped: OrderListItemWithStats[] = (items as OrderWithTicketStatsSource[]).map((o: OrderWithTicketStatsSource) => ({
     ...o,
     ticketStats: {
       total: o._count.tickets,

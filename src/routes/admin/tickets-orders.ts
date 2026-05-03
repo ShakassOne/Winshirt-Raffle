@@ -1,5 +1,5 @@
 import {AuditLog, TicketStatus} from '@prisma/client';
-import {getOrderDetailsForShop, getTicketDetailsForShop, listOrdersForShop, listTicketsForShop} from '../../lib/admin-ticket-orders.js';
+import {getOrderDetailsForShop, getTicketDetailsForShop, listOrdersForShop, listTicketsForShop, type OrderListItemWithStats} from '../../lib/admin-ticket-orders.js';
 
 
 type TicketListItem = {
@@ -12,19 +12,6 @@ type TicketListItem = {
   updatedAt: Date;
   raffle: {title: string};
   order: {shopifyOrderId: string | null; shopifyOrderNumber: string | null} | null;
-};
-
-type OrderListItem = {
-  id: string;
-  shopifyOrderId: string;
-  shopifyOrderNumber: string | null;
-  customerEmail: string | null;
-  financialStatus: string | null;
-  fulfillmentStatus: string | null;
-  totalPrice: unknown;
-  currency: string | null;
-  processedAt: Date | null;
-  ticketStats: {total: number; valid: number; refundedOrCancelled: number};
 };
 
 type OrderDetailTicket = {id: string; ticketNumber: number; status: string; customerEmail: string | null; createdAt: Date};
@@ -57,7 +44,7 @@ export async function renderOrdersPage(shop: string, query: any): Promise<string
   if (query.shopifyOrderNumber) params.set('shopifyOrderNumber', String(query.shopifyOrderNumber));
   const page = Number(query.page ?? 1);
   const data = await listOrdersForShop(shop, {email: query.email, shopifyOrderId: query.shopifyOrderId, shopifyOrderNumber: query.shopifyOrderNumber, page});
-  const rows = data.items.map((o: OrderListItem) => `<tr><td><a href="/admin/orders/${o.id}?shop=${encodeURIComponent(shop)}">${esc(o.shopifyOrderId)}</a></td><td>${esc(o.shopifyOrderNumber)}</td><td>${esc(o.customerEmail)}</td><td>${esc(o.financialStatus)}</td><td>${esc(o.fulfillmentStatus)}</td><td>${esc(o.totalPrice)}</td><td>${esc(o.currency)}</td><td>${o.processedAt?.toISOString() ?? ''}</td><td>${o.ticketStats.total}</td><td>${o.ticketStats.valid}</td><td>${o.ticketStats.refundedOrCancelled}</td></tr>`).join('');
+  const rows = data.items.map((o: OrderListItemWithStats) => `<tr><td><a href="/admin/orders/${o.id}?shop=${encodeURIComponent(shop)}">${esc(o.shopifyOrderId)}</a></td><td>${esc(o.shopifyOrderNumber)}</td><td>${esc(o.customerEmail)}</td><td>${esc(o.financialStatus)}</td><td>${esc(o.fulfillmentStatus)}</td><td>${esc(o.totalPrice)}</td><td>${esc(o.currency)}</td><td>${o.processedAt?.toISOString() ?? ''}</td><td>${o.ticketStats.total}</td><td>${o.ticketStats.valid}</td><td>${o.ticketStats.refundedOrCancelled}</td></tr>`).join('');
   return `<!doctype html><html><body><h1>Admin Orders (read only)</h1><form method="get" action="/admin/orders"><input type="hidden" name="shop" value="${esc(shop)}"/><input name="email" placeholder="email" value="${esc(query.email)}"/><input name="shopifyOrderId" placeholder="shopifyOrderId" value="${esc(query.shopifyOrderId)}"/><input name="shopifyOrderNumber" placeholder="shopifyOrderNumber" value="${esc(query.shopifyOrderNumber)}"/><button type="submit">Filter</button></form><table border="1"><tr><th>shopifyOrderId</th><th>shopifyOrderNumber</th><th>customerEmail</th><th>financialStatus</th><th>fulfillmentStatus</th><th>totalPrice</th><th>currency</th><th>processedAt</th><th>tickets total</th><th>tickets VALID</th><th>tickets REFUNDED/CANCELLED</th></tr>${rows}</table>${pageNav('/admin/orders', shop, data.page, data.pageSize, data.total, params)}</body></html>`;
 }
 
