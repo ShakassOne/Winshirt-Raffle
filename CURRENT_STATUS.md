@@ -34,3 +34,12 @@
 - Génération automatique de tickets avec idempotence sur `shopifyOrderId`.
 - Gestion du matching produit/variant, contrôle de capacité `maxTickets`, mise à jour des compteurs et AuditLog.
 - Toujours non implémenté: `refunds/create`, `orders/cancelled`, affichage client, tirage, Theme App Extension.
+
+
+## Mise à jour 0.3.1
+- Webhooks `orders/cancelled` et `refunds/create` ajoutés sans casser `orders/paid` ni `app/uninstalled`.
+- Invalidation tickets implémentée: `VALID -> CANCELLED` (annulation) et `VALID -> REFUNDED` (remboursement total).
+- Idempotence invalidation: duplicata => aucun double effet, log `duplicate_no_valid_tickets`.
+- Compteurs loterie recalculés depuis les tickets `VALID` (pas de décrément fragile).
+- Limitation V1: remboursement partiel non traçable au `line_item_id` => log `refund_ignored_partial_unhandled` sans invalidation partielle approximative.
+- Toujours non fait: affichage client, tirage, export CSV, Theme App Extension.

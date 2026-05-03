@@ -1,6 +1,6 @@
 # WinShirt Raffle Shopify App
 
-Version: **0.3.0**
+Version: **0.3.1**
 
 ## Pré-requis
 - Node.js 20+
@@ -97,3 +97,10 @@ npm run check
 - Le service métier crée `ShopifyOrder`, génère des tickets `PURCHASE/VALID`, met à jour les compteurs raffle et journalise dans `AuditLog`.
 - Idempotence: une commande déjà connue (`shopifyOrderId`) retourne `skipped_duplicate` et ne regénère aucun ticket.
 - Non inclus dans cette version: `refunds/create`, `orders/cancelled`, affichage client, tirage, Theme App Extension.
+
+
+## Webhooks `orders/cancelled` et `refunds/create` (0.3.1)
+- `orders/cancelled` implémenté: invalide seulement les tickets `VALID` de la commande en `CANCELLED`, recalcule les compteurs depuis les tickets `VALID`, et journalise via `AuditLog`.
+- `refunds/create` implémenté en V1 sûre: remboursement total => tickets `VALID` passent `REFUNDED`; remboursement partiel non traçable => `AuditLog` warning `refund_ignored_partial_unhandled` sans invalidation approximative.
+- Idempotence: second webhook sur la même commande retourne `duplicate_no_valid_tickets`/`no_valid_tickets` selon le service et ne double-décrémente pas.
+- Non inclus: affichage client, tirage, export CSV, Theme App Extension.

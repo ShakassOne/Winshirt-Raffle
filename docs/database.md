@@ -31,3 +31,11 @@
 - Implémenté côté serveur: CRUD Raffle + gestion RaffleProduct.
 - Saisie manuelle des IDs Shopify (`shopifyProductId`, `shopifyVariantId`) en attendant un picker via Admin API.
 - Non inclus: génération tickets, webhooks `orders/paid`, `refunds/create`, `orders/cancelled`, tirage.
+
+
+## Webhooks d'invalidation (0.3.1)
+- `orders/cancelled`: tous les tickets `VALID` liés à `ShopifyOrder` deviennent `CANCELLED`.
+- `refunds/create`: stratégie V1 sûre sans `line_item_id` stocké sur `Ticket`:
+  - remboursement total détecté => `VALID` devient `REFUNDED`;
+  - remboursement partiel non traçable => aucun changement ticket automatique, `AuditLog` warning.
+- Compteurs `Raffle.soldTicketsCount` et `remainingTicketsCount` recalculés depuis le nombre réel de tickets `VALID`.
