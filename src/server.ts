@@ -5,6 +5,7 @@ import {healthResponse} from './routes/public/health.js';
 import {prisma} from './lib/prisma.js';
 import {handleAppUninstalled} from './lib/uninstall.js';
 import {createRaffle, raffleForm, renderRafflesPage, updateRaffle, upsertRaffleProduct} from './routes/admin/index.js';
+import {handleOrderPaid} from './lib/order-paid.js';
 
 const PORT = Number(process.env.PORT ?? 3000);
 const app = express();
@@ -46,6 +47,21 @@ app.post('/webhooks', async (req: Request, res: Response) => {
 const webhookDeliveryMethod = DeliveryMethod.Http;
 
 shopify.webhooks.addHandlers({
+
+  ORDERS_PAID: {
+    deliveryMethod: webhookDeliveryMethod,
+    callbackUrl: '/webhooks',
+    callback: async (_topic: string, shop: string, body: string) => {
+      try {
+        const payload = JSON.parse(body);
+        const result = await handleOrderPaid(shop, payload);
+        console.log(`[webhook] orders/paid processed for ${shop}: ${result}`);
+      } catch (error) {
+        console.error(`[webhook] orders/paid failed for ${shop}`, error);
+        throw error;
+      }
+    }
+  },
   APP_UNINSTALLED: {
     deliveryMethod: webhookDeliveryMethod,
     callbackUrl: '/webhooks',
