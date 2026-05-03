@@ -19,10 +19,10 @@
 - SQL migration scaffold: `add_raffle_domain_models`.
 
 ## Not implemented yet
-- No admin UI/CRUD screens.
-- No paid order webhooks processing.
-- No refund/cancellation business workflow automation.
-- No ticket generation logic.
+- Admin UI lecture seule disponible pour tickets/orders et CRUD raffle V1 (serveur).
+- Webhook `orders/paid` opérationnel (création commande + tickets).
+- Webhooks `orders/cancelled` et `refunds/create` opérationnels (invalidation tickets V1).
+- Ticket generation logic opérationnelle via `orders/paid` (achat => tickets `PURCHASE`).
 - No real draw execution.
 - No storefront/theme app extension features.
 
@@ -39,3 +39,9 @@
   - remboursement total détecté => `VALID` devient `REFUNDED`;
   - remboursement partiel non traçable => aucun changement ticket automatique, `AuditLog` warning.
 - Compteurs `Raffle.soldTicketsCount` et `remainingTicketsCount` recalculés depuis le nombre réel de tickets `VALID`.
+
+
+## Customer tickets view V1 (0.3.7)
+- Surface publique `GET/POST /tickets` en lecture seule, recherche contrainte à `email + orderReference`.
+- La recherche est bornée au shop courant via `shopDomain -> shopId` avant lecture commande/tickets.
+- Les données retournées sont minimales pour l'affichage client (sans payload AuditLog).

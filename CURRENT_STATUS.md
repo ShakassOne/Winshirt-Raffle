@@ -63,6 +63,13 @@
 - Aucun changement de scope fonctionnel.
 
 
+## Mise à jour 0.3.7
+- Affichage client tickets V1 ajouté avec recherche sécurisée email + référence de commande sur route publique `/tickets` (lecture seule).
+- Service dédié `findCustomerTicketsByOrder(shopDomain, email, orderReference)` ajouté avec filtrage strict multi-boutique et normalisation email.
+- Messages neutres et statuts explicites pour tickets annulés/remboursés; aucune exposition des audit payloads.
+- Aucun ajout hors scope (pas de modification ticket, pas de Theme App Extension, pas de tirage, pas d'export CSV).
+
+
 ## Mise à jour 0.3.6
 - Correction TypeScript TS2322 sur `listOrdersForShop`: sélection Prisma alignée sur le type enrichi retourné.
 - Aucun changement fonctionnel de scope.
